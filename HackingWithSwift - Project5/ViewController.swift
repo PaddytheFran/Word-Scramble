@@ -65,15 +65,31 @@ class ViewController: UITableViewController {
         
     }
 
-    func isPossible(word:String) -> Bool {
+    func isPossible(word: String) -> Bool {
+        var tempWord = title!.lowercased()
+        
+        for letter in word {
+            
+            if let pos = tempWord.range(of: String(letter)) {
+                tempWord.remove(at: pos.lowerBound)
+                
+            } else {
+                
+                return false
+                
+            }
+        }
+        
         return true
+        
+    }
+        
+
+    func isOriginal(word: String) -> Bool {
+        return !usedWords.contains(word)
     }
 
-    func isOriginal(word:String) -> Bool {
-        return true
-    }
-
-    func isReal(word:String) -> Bool {
+    func isReal(word: String) -> Bool {
         return true
     }
 
