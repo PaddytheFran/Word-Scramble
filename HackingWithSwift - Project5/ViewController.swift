@@ -90,11 +90,18 @@ class ViewController: UITableViewController {
     }
 
     func isReal(word: String) -> Bool {
-        return true
+        let checker = UITextChecker()
+        let range = NSMakeRange(0, word.utf16.count)
+        let misspelledRange = checker.rangeOfMisspelledWord(in: word, range: range, startingAt: 0, wrap: false, language: "en")
+        
+        return misspelledRange.location == NSNotFound
     }
 
     func submit(answer: String) {
         let lowerAnswer = answer.lowercased()
+        
+        let errorTitle: String
+        let errorMessage: String
         
         if isPossible(word: lowerAnswer) {
             
@@ -106,9 +113,24 @@ class ViewController: UITableViewController {
                     let indexPath = IndexPath(row:0, section: 0)
                     tableView.insertRows(at: [indexPath], with: .automatic)
                     
+                    return
+                
+                } else {
+                    errorTitle = "Word not recognised"
+                    errorMessage = "You can't just make them up, you know!"
                 }
+            } else {
+                errorTitle = "Word used already"
+                errorMessage = "Be more original!"
             }
+        } else {
+            errorTitle = "Word not possible"
+            errorMessage = "You can't spell that word from '\(title!.lowercased())'!"
         }
+        
+        let ac = UIAlertController(title: errorTitle, message: errorMessage, preferredStyle: .alert)
+        ac.addAction(UIAlertAction(title: "OK", style: .default))
+        present(ac, animated: true)
     }
 
     
